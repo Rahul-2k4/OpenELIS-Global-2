@@ -117,6 +117,10 @@ public class AppConfig implements WebMvcConfigurer {
         registry.addResourceHandler("fontawesome-free-5.13.1-web/**")
                 .addResourceLocations("/static/fontawesome-free-5.13.1-web/");
         registry.addResourceHandler("documentation/**").addResourceLocations("classpath:static/documentation/");
+        // SpringDoc OpenAPI/Swagger UI resources (enabled via
+        // org.openelisglobal.openapi.enabled property)
+        registry.addResourceHandler("/swagger-ui/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/swagger-ui/");
     }
 
     @Bean
