@@ -108,9 +108,9 @@ public class PatientManagementRestController extends BaseRestController {
         }
     }
 
-    @Operation(summary = "Get patient photo", description = "Retrieves a patient's photo by patient ID. Can return either full-size image or thumbnail.")
+    @Operation(summary = "Get patient photo", description = "Retrieves a patient's photo by patient ID. Can return either full-size image or thumbnail. The response contains base64-encoded image data.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Photo retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class))),
+            @ApiResponse(responseCode = "200", description = "Photo retrieved successfully. Response contains a 'data' field with base64-encoded image string.", content = @Content(mediaType = "application/json", schema = @Schema(description = "Map containing 'data' key with base64-encoded image string", example = "{\"data\": \"base64-encoded-image-string\"}"))),
             @ApiResponse(responseCode = "404", description = "Patient or photo not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error") })
     @GetMapping("patient-photos/{id}/{isThumbnail}")

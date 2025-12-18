@@ -21,8 +21,8 @@ import org.springframework.context.annotation.Configuration;
  * alignment.
  *
  * <p>
- * Access the Swagger UI at: /swagger-ui.html Access the OpenAPI spec at:
- * /v3/api-docs
+ * Access the Swagger UI at: /swagger-ui.html. Access the OpenAPI spec at:
+ * /v3/api-docs.
  */
 @Configuration
 @ConditionalOnProperty(property = "org.openelisglobal.openapi.enabled", havingValue = "true", matchIfMissing = false)
