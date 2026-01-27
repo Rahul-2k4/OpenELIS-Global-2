@@ -49,7 +49,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/rest/")
-@Tag(name = "Patient Management", description = "APIs for managing patient data including creation, updates, and photo retrieval")
+@Tag(name = "Patient Management",
+        description = "APIs for managing patient data including creation, updates, and photo retrieval")
 public class PatientManagementRestController extends BaseRestController {
     @Autowired
     SearchResultsService searchService;
@@ -62,7 +63,10 @@ public class PatientManagementRestController extends BaseRestController {
     @Autowired
     PatientPhotoService photoService;
 
-    @Operation(summary = "Create or update a patient", description = "Creates a new patient if patientPK is not provided, or updates an existing patient if patientPK is provided. Also syncs patient data with FHIR server.")
+    @Operation(summary = "Create or update a patient",
+            description = "Creates a new patient if patientPK is not provided, or updates an existing patient if "
+                    + "patientPK is provided. "
+                    + "Also syncs patient data with FHIR server.")
     @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Patient saved successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid patient data provided"),
             @ApiResponse(responseCode = "500", description = "Internal server error") })
@@ -108,14 +112,23 @@ public class PatientManagementRestController extends BaseRestController {
         }
     }
 
-    @Operation(summary = "Get patient photo", description = "Retrieves a patient's photo by patient ID. Can return either full-size image or thumbnail. The response contains base64-encoded image data.")
+    @Operation(summary = "Get patient photo",
+            description = "Retrieves a patient's photo by patient ID. Can return either full-size image or thumbnail. "
+                    + "The response contains base64-encoded image data.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Photo retrieved successfully. Response contains a 'data' field with base64-encoded image string.", content = @Content(mediaType = "application/json", schema = @Schema(description = "Map containing 'data' key with base64-encoded image string", example = "{\"data\": \"base64-encoded-image-string\"}"))),
+            @ApiResponse(responseCode = "200",
+                        description = "Photo retrieved successfully. Response contains a 'data' field with "
+                                + "base64-encoded image string.",
+                        content = @Content(mediaType = "application/json",
+                                schema = @Schema(description = "Map containing 'data' key with base64-encoded "
+                                        + "image string",
+                                        example = "{\"data\": \"base64-encoded-image-string\"}"))),
             @ApiResponse(responseCode = "404", description = "Patient or photo not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error") })
     @GetMapping("patient-photos/{id}/{isThumbnail}")
     public ResponseEntity<Map<String, String>> getPhoto(@Parameter(description = "Patient ID") @PathVariable String id,
-            @Parameter(description = "If true, returns thumbnail; if false, returns full-size image") @PathVariable boolean isThumbnail)
+            @Parameter(description = "If true, returns thumbnail; if false, returns full-size image")
+                    @PathVariable boolean isThumbnail)
             throws LIMSRuntimeException {
         String photo = photoService.getPhotoByPatientId(id, isThumbnail);
         return ResponseEntity.ok(Map.of("data", photo));
