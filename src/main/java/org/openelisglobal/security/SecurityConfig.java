@@ -93,8 +93,13 @@ public class SecurityConfig {
 
     // TODO should we move these to the properties files?
     // pages that have special security constraints
+    // Note: OpenAPI endpoints (/swagger-ui/**, /v3/api-docs/**) are included for
+    // dev/test environments.
+    // The OpenAPI feature itself is only enabled when
+    // org.openelisglobal.openapi.enabled=true
     public static final String[] OPEN_PAGES = { "/pluginServlet/**", "/ChangePasswordLogin",
-            "/UpdateLoginChangePassword", "/health/**", "/rest/open-configuration-properties", "/docs/UserManual" };
+            "/UpdateLoginChangePassword", "/health/**", "/rest/open-configuration-properties", "/docs/UserManual",
+            "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml" };
     public static final String[] LOGIN_PAGES = { "/LoginPage", "/ValidateLogin", "/session" };
 
     public static final String[] AUTH_OPEN_PAGES = { "/Home", "/Dashboard", "/Logout", "/MasterListsPage",

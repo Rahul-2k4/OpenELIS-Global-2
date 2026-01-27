@@ -1,5 +1,12 @@
 package org.openelisglobal.patient.controller.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
@@ -42,6 +49,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/rest/")
+@Tag(name = "Patient Management", description = "APIs for managing patient data including creation, updates, and photo retrieval")
 public class PatientManagementRestController extends BaseRestController {
     @Autowired
     SearchResultsService searchService;
@@ -54,6 +62,10 @@ public class PatientManagementRestController extends BaseRestController {
     @Autowired
     PatientPhotoService photoService;
 
+    @Operation(summary = "Create or update a patient", description = "Creates a new patient if patientPK is not provided, or updates an existing patient if patientPK is provided. Also syncs patient data with FHIR server.")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Patient saved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid patient data provided"),
+            @ApiResponse(responseCode = "500", description = "Internal server error") })
     @PostMapping(value = "PatientManagement", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void savepatient(HttpServletRequest request,
@@ -96,8 +108,14 @@ public class PatientManagementRestController extends BaseRestController {
         }
     }
 
+    @Operation(summary = "Get patient photo", description = "Retrieves a patient's photo by patient ID. Can return either full-size image or thumbnail.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Photo retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class))),
+            @ApiResponse(responseCode = "404", description = "Patient or photo not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error") })
     @GetMapping("patient-photos/{id}/{isThumbnail}")
-    public ResponseEntity<Map<String, String>> getPhoto(@PathVariable String id, @PathVariable boolean isThumbnail)
+    public ResponseEntity<Map<String, String>> getPhoto(@Parameter(description = "Patient ID") @PathVariable String id,
+            @Parameter(description = "If true, returns thumbnail; if false, returns full-size image") @PathVariable boolean isThumbnail)
             throws LIMSRuntimeException {
         String photo = photoService.getPhotoByPatientId(id, isThumbnail);
         return ResponseEntity.ok(Map.of("data", photo));
